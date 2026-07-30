@@ -1,7 +1,8 @@
 # MediBlack 실행 · 배포 가이드 (최소 설정)
 
-이 문서는 **직접 해야 할 일만** 남겨 두었습니다.  
-코드·GitHub 리포지토리는 이미 준비되어 있다고 가정합니다.
+**GitHub 저장소(이미 생성·푸시 완료):** https://github.com/kyungalee1/mediblack
+
+이 문서는 **직접 해야 할 일만** 남겨 두었습니다.
 
 ---
 
@@ -34,7 +35,9 @@ npm run dev
 
 ### 2) 테이블 만들기
 1. 왼쪽 **SQL** → **New query**
-2. 이 프로젝트의 `supabase/schema.sql` 내용 **전체 복사 → 붙여넣기 → Run**
+2. **이미 bookings 테이블이 있으면** `supabase/migration_booking_number.sql` 실행  
+   **새 프로젝트면** `supabase/schema.sql` 전체 실행
+3. SQL 내용 **전체 복사 → 붙여넣기 → Run**
 
 ### 3) API 키 복사
 1. **Project Settings** (톱니바퀴) → **API**

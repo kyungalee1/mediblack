@@ -3,6 +3,7 @@ export type PatientGender = "남성" | "여성" | "기타";
 export type PlanId = "standard" | "deep" | "full";
 
 export interface BookingFormData {
+  bookingNumber: string;
   applicantName: string;
   applicantPhone: string;
   relationship: Relationship | "";
@@ -16,12 +17,14 @@ export interface BookingFormData {
   appointmentTime: string;
   medicalCondition: string;
   specialRequests: string;
+  doctorQuestions: string;
   selectedPlan: PlanId | "";
   agreePrivacy: boolean;
   agreeLiability: boolean;
 }
 
 export interface BookingInsert {
+  booking_number: string;
   applicant_name: string;
   applicant_phone: string;
   relationship: string;
@@ -35,29 +38,34 @@ export interface BookingInsert {
   appointment_time: string | null;
   medical_condition: string | null;
   special_requests: string | null;
+  doctor_questions: string | null;
   selected_plan: string;
   price: number;
   status: string;
 }
 
-export const INITIAL_FORM_DATA: BookingFormData = {
-  applicantName: "",
-  applicantPhone: "",
-  relationship: "",
-  patientName: "",
-  patientGender: "",
-  patientAge: "",
-  patientPhone: "",
-  hospitalName: "",
-  department: "",
-  appointmentDate: "",
-  appointmentTime: "",
-  medicalCondition: "",
-  specialRequests: "",
-  selectedPlan: "",
-  agreePrivacy: false,
-  agreeLiability: false,
-};
+export function createInitialFormData(bookingNumber: string): BookingFormData {
+  return {
+    bookingNumber,
+    applicantName: "",
+    applicantPhone: "",
+    relationship: "",
+    patientName: "",
+    patientGender: "",
+    patientAge: "",
+    patientPhone: "",
+    hospitalName: "",
+    department: "",
+    appointmentDate: "",
+    appointmentTime: "",
+    medicalCondition: "",
+    specialRequests: "",
+    doctorQuestions: "",
+    selectedPlan: "",
+    agreePrivacy: false,
+    agreeLiability: false,
+  };
+}
 
 export const RELATIONSHIP_OPTIONS: Relationship[] = [
   "자녀",

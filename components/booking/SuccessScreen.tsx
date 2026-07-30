@@ -38,7 +38,7 @@ export function SuccessScreen({ bookingRef, onReset }: SuccessScreenProps) {
 
       <div className="mt-6 w-full rounded-3xl border-2 border-dashed border-slate-200 bg-slate-50 px-5 py-4">
         <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-          접수 번호
+          예약번호
         </p>
         <p className="mt-1 font-mono text-2xl font-bold tracking-wider text-navy">
           {bookingRef}

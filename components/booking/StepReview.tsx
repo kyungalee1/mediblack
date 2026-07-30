@@ -36,6 +36,18 @@ export function StepReview({ data, errors, onChange }: StepReviewProps) {
         </p>
       </div>
 
+      <section className="rounded-3xl border-2 border-dashed border-navy/20 bg-slate-50 px-5 py-4 text-center">
+        <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          예약번호
+        </p>
+        <p className="mt-1 font-mono text-xl font-bold tracking-wider text-navy">
+          {data.bookingNumber}
+        </p>
+        <p className="mt-1 text-xs text-slate-500">
+          제출 후에도 동일 번호로 관리됩니다.
+        </p>
+      </section>
+
       <section className="rounded-3xl bg-slate-50 p-5">
         <h3 className="mb-1 text-xs font-bold uppercase tracking-wider text-slate-400">
           신청자 · 환자
@@ -63,13 +75,14 @@ export function StepReview({ data, errors, onChange }: StepReviewProps) {
           <Row label="병원" value={data.hospitalName} />
           <Row label="진료과" value={data.department} />
           <Row
-            label="일정"
+            label="병원 예약 일정"
             value={[data.appointmentDate, data.appointmentTime]
               .filter(Boolean)
               .join(" ")}
           />
           <Row label="질환/상태" value={data.medicalCondition} />
           <Row label="요청사항" value={data.specialRequests} />
+          <Row label="의사 질문" value={data.doctorQuestions} />
         </dl>
       </section>
 

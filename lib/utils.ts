@@ -16,7 +16,12 @@ export function formatPrice(price: number): string {
   return new Intl.NumberFormat("ko-KR").format(price) + "원";
 }
 
-export function generateBookingRef(id: string): string {
-  const short = id.replace(/-/g, "").slice(0, 8).toUpperCase();
-  return `MB-${short}`;
+/** 예약번호 자동 생성 (예: MB-260730-A3F91C) — DB booking_number에 저장 */
+export function generateBookingNumber(): string {
+  const now = new Date();
+  const y = String(now.getFullYear()).slice(2);
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  const rand = crypto.randomUUID().replace(/-/g, "").slice(0, 6).toUpperCase();
+  return `MB-${y}${m}${d}-${rand}`;
 }

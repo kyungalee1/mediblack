@@ -60,7 +60,7 @@ export function StepHospital({ data, errors, onChange }: StepHospitalProps) {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <Label htmlFor="appointmentDate">예약 날짜</Label>
+          <Label htmlFor="appointmentDate">병원 예약 날짜</Label>
           <Input
             id="appointmentDate"
             name="appointmentDate"
@@ -73,7 +73,7 @@ export function StepHospital({ data, errors, onChange }: StepHospitalProps) {
           <FieldError message={errors.appointmentDate} />
         </div>
         <div>
-          <Label htmlFor="appointmentTime">예약 시간</Label>
+          <Label htmlFor="appointmentTime">병원 예약 시간</Label>
           <Input
             id="appointmentTime"
             name="appointmentTime"
@@ -83,6 +83,9 @@ export function StepHospital({ data, errors, onChange }: StepHospitalProps) {
           />
         </div>
       </div>
+      <p className="-mt-2 text-xs text-slate-500">
+        병원에 이미 잡힌 진료 예약 날짜·시간을 입력해 주세요.
+      </p>
 
       <div>
         <Label htmlFor="medicalCondition">주요 질환 및 상태</Label>
@@ -96,13 +99,24 @@ export function StepHospital({ data, errors, onChange }: StepHospitalProps) {
       </div>
 
       <div>
-        <Label htmlFor="specialRequests">특이사항 · 요청사항</Label>
+        <Label htmlFor="specialRequests">요청사항</Label>
         <Textarea
           id="specialRequests"
           name="specialRequests"
-          placeholder="이동 보조, 의사 전달 요청, 휠체어 필요 여부 등"
+          placeholder="이동 보조, 휠체어 필요 여부, 동행 시 유의사항 등"
           value={data.specialRequests}
           onChange={(e) => onChange("specialRequests", e.target.value)}
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="doctorQuestions">의사선생님께 여쭐 내용</Label>
+        <Textarea
+          id="doctorQuestions"
+          name="doctorQuestions"
+          placeholder="진료 시 의사선생님께 여쭙고 싶은 질문이나 전달할 내용을 적어 주세요."
+          value={data.doctorQuestions}
+          onChange={(e) => onChange("doctorQuestions", e.target.value)}
         />
       </div>
     </div>

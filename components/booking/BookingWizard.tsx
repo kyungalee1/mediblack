@@ -12,10 +12,10 @@ import { StepReview } from "@/components/booking/StepReview";
 import { SuccessScreen } from "@/components/booking/SuccessScreen";
 import { getPlanById } from "@/lib/plans";
 import {
-  INITIAL_FORM_DATA,
+  createInitialFormData,
   type BookingFormData,
 } from "@/lib/types";
-import { generateBookingRef } from "@/lib/utils";
+import { generateBookingNumber } from "@/lib/utils";
 
 type Errors = Partial<Record<keyof BookingFormData, string>>;
 
@@ -32,7 +32,8 @@ function validateStep(step: number, data: BookingFormData): Errors {
 
   if (step === 2) {
     if (!data.hospitalName.trim()) errors.hospitalName = "병원명을 입력해 주세요.";
-    if (!data.appointmentDate) errors.appointmentDate = "예약 날짜를 선택해 주세요.";
+    if (!data.appointmentDate)
+      errors.appointmentDate = "병원 예약 날짜를 선택해 주세요.";
   }
 
   if (step === 3) {
@@ -58,11 +59,13 @@ const STEP_TITLES = [
 export function BookingWizard() {
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
-  const [data, setData] = useState<BookingFormData>(INITIAL_FORM_DATA);
+  const [data, setData] = useState<BookingFormData>(() =>
+    createInitialFormData(generateBookingNumber())
+  );
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  const [bookingRef, setBookingRef] = useState<string | null>(null);
+  const [submittedRef, setSubmittedRef] = useState<string | null>(null);
 
   const onChange = <K extends keyof BookingFormData>(
     key: K,
@@ -112,6 +115,7 @@ export function BookingWizard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          booking_number: data.bookingNumber,
           applicant_name: data.applicantName.trim(),
           applicant_phone: data.applicantPhone,
           relationship: data.relationship,
@@ -125,6 +129,7 @@ export function BookingWizard() {
           appointment_time: data.appointmentTime || null,
           medical_condition: data.medicalCondition.trim() || null,
           special_requests: data.specialRequests.trim() || null,
+          doctor_questions: data.doctorQuestions.trim() || null,
           selected_plan: plan.name,
           price: plan.price,
           status: "PENDING",
@@ -136,8 +141,9 @@ export function BookingWizard() {
         throw new Error(json.error || "접수에 실패했습니다.");
       }
 
-      const id = json.id as string;
-      setBookingRef(generateBookingRef(id));
+      setSubmittedRef(
+        (json.booking_number as string) || data.bookingNumber
+      );
     } catch (err) {
       setSubmitError(
         err instanceof Error ? err.message : "접수 중 오류가 발생했습니다."
@@ -148,16 +154,16 @@ export function BookingWizard() {
   };
 
   const onReset = () => {
-    setData(INITIAL_FORM_DATA);
+    setData(createInitialFormData(generateBookingNumber()));
     setErrors({});
     setSubmitError("");
-    setBookingRef(null);
+    setSubmittedRef(null);
     setDirection(1);
     setStep(1);
   };
 
-  if (bookingRef) {
-    return <SuccessScreen bookingRef={bookingRef} onReset={onReset} />;
+  if (submittedRef) {
+    return <SuccessScreen bookingRef={submittedRef} onReset={onReset} />;
   }
 
   return (
