@@ -1,0 +1,98 @@
+# MediBlack 실행 · 배포 가이드 (최소 설정)
+
+이 문서는 **직접 해야 할 일만** 남겨 두었습니다.  
+코드·GitHub 리포지토리는 이미 준비되어 있다고 가정합니다.
+
+---
+
+## A. 지금 바로 내 PC에서 실행 (1분, DB 없이 가능)
+
+터미널에서 프로젝트 폴더로 이동한 뒤:
+
+```powershell
+cd C:\Users\10124\Desktop\mediBlack
+npm install
+npm run dev
+```
+
+브라우저에서 **http://localhost:3000** 을 엽니다.
+
+- Supabase를 아직 안 연결해도 **접수 → 성공 화면**까지 동작합니다 (개발용 mock).
+- 실제 DB 저장은 아래 B단계를 하면 됩니다.
+
+중단: 터미널에서 `Ctrl + C`
+
+---
+
+## B. Supabase 연결 (최초 1회, 약 5분)
+
+### 1) 프로젝트 만들기
+1. https://supabase.com/dashboard 접속 후 로그인 (GitHub 로그인 권장)
+2. **New project** 클릭
+3. 이름: `mediblack` / 지역: `Northeast Asia (Seoul)` 또는 가까운 지역
+4. DB 비밀번호를 **안전한 곳에 저장**하고 Create
+
+### 2) 테이블 만들기
+1. 왼쪽 **SQL** → **New query**
+2. 이 프로젝트의 `supabase/schema.sql` 내용 **전체 복사 → 붙여넣기 → Run**
+
+### 3) API 키 복사
+1. **Project Settings** (톱니바퀴) → **API**
+2. 아래 두 값을 복사합니다.
+   - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
+   - `anon` `public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+### 4) 로컬 환경변수 파일 만들기
+프로젝트 폴더에서:
+
+```powershell
+copy .env.local.example .env.local
+notepad .env.local
+```
+
+예시:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...
+```
+
+저장 후 `npm run dev`를 **다시** 실행하세요.
+
+---
+
+## C. Vercel 배포 (최초 1회, 약 3분)
+
+GitHub에 코드가 올라가 있으면:
+
+1. https://vercel.com/new 접속 (GitHub로 로그인)
+2. **Import** 에서 `mediblack` (또는 안내된 리포지토리) 선택
+3. **Environment Variables**에 B-3의 두 값을 그대로 추가
+4. **Deploy** 클릭
+
+배포가 끝나면 `https://….vercel.app` 주소가 생깁니다.  
+이후 GitHub에 push하면 **자동 재배포**됩니다.
+
+---
+
+## D. 체크리스트
+
+| 단계 | 해야 할 일 | 완료 기준 |
+|------|------------|-----------|
+| 로컬 실행 | `npm run dev` | localhost에서 폼이 보임 |
+| Supabase | 프로젝트 + SQL 실행 + `.env.local` | 접수 후 DB `bookings`에 row 생김 |
+| Vercel | Import + env 2개 | 공개 URL에서 접수 가능 |
+| PWA | 폰 Safari/Chrome에서 사이트 열기 | “홈 화면에 추가” 가능 |
+
+---
+
+## 자주 묻는 문제
+
+**Q. 접수가 실패해요**  
+→ `.env.local` 값이 맞는지, SQL을 실행했는지 확인. 개발 서버를 재시작했는지 확인.
+
+**Q. Vercel에서는 되고 로컬만 안 돼요**  
+→ 로컬 `.env.local`이 없거나 오타. Vercel env와 동일하게 맞추세요.
+
+**Q. PWA 설치 버튼이 안 보여요**  
+→ Chrome(안드로이드)는 HTTPS(또는 localhost)에서만 설치 프롬프트가 뜹니다. iOS는 Safari 공유 → 홈 화면에 추가를 사용하세요.
