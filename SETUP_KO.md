@@ -81,6 +81,13 @@ GitHub에 코드가 올라가 있으면:
 배포가 끝나면 `https://….vercel.app` 주소가 생깁니다.  
 이후 GitHub에 push하면 **자동 재배포**됩니다.
 
+### `/manager` 가 404일 때
+1. Vercel → **Deployments** 에서 최신 배포가 **Ready(초록)** 인지 확인  
+2. 해당 배포 커밋에 `manager` / `partner` 가 포함됐는지 확인  
+3. 배포가 실패(Error)면 Build 로그를 열고, Build Command가 `npm run build` 인지 확인  
+4. 모바일에서 **시크릿/프라이빗** 으로 `…/manager` 또는 `…/partner` 접속 (옛 PWA 캐시 우회)  
+5. 그래도 안 되면 해당 배포에서 **Promote to Production**
+
 ---
 
 ## D. 체크리스트

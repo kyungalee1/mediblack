@@ -29,13 +29,18 @@ export default function HomePage() {
         <BookingWizard />
       </section>
 
-      <footer className="space-y-1 py-5 text-center text-[11px] text-slate-400">
+      <footer className="space-y-2 py-5 text-center text-[11px] text-slate-400">
         <p>
           <Link
             href="/manager"
-            className="font-medium text-teal underline-offset-2 hover:underline"
+            className="inline-flex items-center justify-center rounded-2xl bg-teal px-4 py-3 text-sm font-bold text-white"
           >
-            동행 Manager 지원하기 →
+            동행 Manager 지원하기
+          </Link>
+        </p>
+        <p>
+          <Link href="/partner" className="underline-offset-2 hover:underline">
+            또는 /partner 로 열기
           </Link>
         </p>
         <p>© {new Date().getFullYear()} MediBlack. All rights reserved.</p>

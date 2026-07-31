@@ -7,10 +7,10 @@ export const metadata: Metadata = {
     "MediBlack 프리미엄 병원 동행 매니저 지원. 자격·경력을 등록하고 전문 동행 파트너로 합류하세요.",
 };
 
-/** Bust any stale CDN 404 cached before this route existed */
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export default function ManagerRoutePage() {
+/** Alias of /manager — use if /manager is still CDN-cached as 404 */
+export default function PartnerRoutePage() {
   return <ManagerApplyPage />;
 }
