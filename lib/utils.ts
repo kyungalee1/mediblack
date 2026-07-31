@@ -25,3 +25,13 @@ export function generateBookingNumber(): string {
   const rand = crypto.randomUUID().replace(/-/g, "").slice(0, 6).toUpperCase();
   return `MB-${y}${m}${d}-${rand}`;
 }
+
+/** 동행 매니저 지원번호 (예: DM-260731-A3F91C) */
+export function generateApplicationNumber(): string {
+  const now = new Date();
+  const y = String(now.getFullYear()).slice(2);
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  const rand = crypto.randomUUID().replace(/-/g, "").slice(0, 6).toUpperCase();
+  return `DM-${y}${m}${d}-${rand}`;
+}

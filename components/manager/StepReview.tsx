@@ -2,7 +2,7 @@
 
 import { Label } from "@/components/ui/label";
 import { FieldError } from "@/components/ui/chip";
-import type { ManagerFormData } from "@/lib/types";
+import type { ManagerFormData } from "@/lib/manager";
 import { cn } from "@/lib/utils";
 
 type Errors = Partial<Record<keyof ManagerFormData, string>>;

@@ -6,6 +6,7 @@
   --royal: #1d4ed8;
   --gold: #d4a017;
   --gold-light: #e8bc3a;
+  --teal: #0f766e;
   --slate-50: #f8fafc;
   --background: #f4f6f9;
   --foreground: #0f172a;
@@ -19,6 +20,7 @@
   --color-royal: var(--royal);
   --color-gold: var(--gold);
   --color-gold-light: var(--gold-light);
+  --color-teal: var(--teal);
   --font-sans: "Pretendard Variable", Pretendard, var(--font-pretendard),
     "Apple SD Gothic Neo", sans-serif;
 }
@@ -43,6 +45,15 @@ body {
     radial-gradient(ellipse 120% 80% at 50% -20%, #dbe4f5 0%, transparent 55%),
     radial-gradient(ellipse 80% 50% at 100% 100%, #f5ecd4 0%, transparent 45%),
     linear-gradient(180deg, #eef2f7 0%, #f7f8fa 40%, #f4f6f9 100%);
+}
+
+/* 동행 Manager (/manager) — teal-tinted shell */
+.manager-shell {
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -20%, #d4e8e6 0%, transparent 55%),
+    radial-gradient(ellipse 80% 50% at 100% 100%, #dbe4f5 0%, transparent 45%),
+    linear-gradient(180deg, #eef5f4 0%, #f7f8fa 40%, #f4f6f9 100%);
 }
 
 .safe-bottom {

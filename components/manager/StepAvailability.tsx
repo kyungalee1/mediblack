@@ -10,7 +10,7 @@ import {
   type AvailableDay,
   type Language,
   type ManagerFormData,
-} from "@/lib/types";
+} from "@/lib/manager";
 
 type Errors = Partial<Record<keyof ManagerFormData, string>>;
 

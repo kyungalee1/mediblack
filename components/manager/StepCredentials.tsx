@@ -4,14 +4,14 @@ import { BadgeCheck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Chip, FieldError } from "@/components/ui/chip";
-import { CERTIFICATION_META } from "@/lib/certifications";
 import {
+  CERTIFICATION_META,
   EXPERIENCE_OPTIONS,
   SPECIALTY_OPTIONS,
   type Certification,
   type ManagerFormData,
   type SpecialtyArea,
-} from "@/lib/types";
+} from "@/lib/manager";
 import { cn } from "@/lib/utils";
 
 type Errors = Partial<Record<keyof ManagerFormData, string>>;

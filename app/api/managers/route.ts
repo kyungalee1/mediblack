@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
-import type { ManagerInsert } from "@/lib/types";
+import type { ManagerInsert } from "@/lib/manager";
 import { generateApplicationNumber } from "@/lib/utils";
 
 function isValidPayload(body: unknown): body is ManagerInsert {

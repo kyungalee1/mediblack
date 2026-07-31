@@ -4,16 +4,16 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { StepIndicator } from "@/components/apply/StepIndicator";
-import { StepProfile } from "@/components/apply/StepProfile";
-import { StepCredentials } from "@/components/apply/StepCredentials";
-import { StepAvailability } from "@/components/apply/StepAvailability";
-import { StepReview } from "@/components/apply/StepReview";
-import { SuccessScreen } from "@/components/apply/SuccessScreen";
+import { StepIndicator } from "@/components/manager/StepIndicator";
+import { StepProfile } from "@/components/manager/StepProfile";
+import { StepCredentials } from "@/components/manager/StepCredentials";
+import { StepAvailability } from "@/components/manager/StepAvailability";
+import { StepReview } from "@/components/manager/StepReview";
+import { SuccessScreen } from "@/components/manager/SuccessScreen";
 import {
-  createInitialFormData,
+  createInitialManagerFormData,
   type ManagerFormData,
-} from "@/lib/types";
+} from "@/lib/manager";
 import { generateApplicationNumber } from "@/lib/utils";
 
 type Errors = Partial<Record<keyof ManagerFormData, string>>;
@@ -49,8 +49,7 @@ function validateStep(step: number, data: ManagerFormData): Errors {
   if (step === 4) {
     if (!data.agreePrivacy)
       errors.agreePrivacy = "개인정보 수집 동의가 필요합니다.";
-    if (!data.agreeTerms)
-      errors.agreeTerms = "활동 약관 동의가 필요합니다.";
+    if (!data.agreeTerms) errors.agreeTerms = "활동 약관 동의가 필요합니다.";
   }
 
   return errors;
@@ -67,7 +66,7 @@ export function ApplyWizard() {
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
   const [data, setData] = useState<ManagerFormData>(() =>
-    createInitialFormData(generateApplicationNumber())
+    createInitialManagerFormData(generateApplicationNumber())
   );
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
@@ -159,7 +158,7 @@ export function ApplyWizard() {
   };
 
   const onReset = () => {
-    setData(createInitialFormData(generateApplicationNumber()));
+    setData(createInitialManagerFormData(generateApplicationNumber()));
     setErrors({});
     setSubmitError("");
     setSubmittedRef(null);
@@ -197,7 +196,11 @@ export function ApplyWizard() {
               <StepProfile data={data} errors={errors} onChange={onChange} />
             )}
             {step === 2 && (
-              <StepCredentials data={data} errors={errors} onChange={onChange} />
+              <StepCredentials
+                data={data}
+                errors={errors}
+                onChange={onChange}
+              />
             )}
             {step === 3 && (
               <StepAvailability

@@ -16,9 +16,12 @@ npm install
 npm run dev
 ```
 
-브라우저에서 **http://localhost:3000** 을 엽니다.
+브라우저에서 엽니다.
 
-- Supabase를 아직 안 연결해도 **접수 → 성공 화면**까지 동작합니다 (개발용 mock).
+- 보호자 접수: **http://localhost:3000**
+- 동행 Manager 지원: **http://localhost:3000/manager**
+
+- Supabase를 아직 안 연결해도 **접수/지원 → 성공 화면**까지 동작합니다 (개발용 mock).
 - 실제 DB 저장은 아래 B단계를 하면 됩니다.
 
 중단: 터미널에서 `Ctrl + C`
@@ -35,9 +38,11 @@ npm run dev
 
 ### 2) 테이블 만들기
 1. 왼쪽 **SQL** → **New query**
-2. **이미 bookings 테이블이 있으면** `supabase/migration_booking_number.sql` 실행  
-   **새 프로젝트면** `supabase/schema.sql` 전체 실행
-3. SQL 내용 **전체 복사 → 붙여넣기 → Run**
+2. **새 프로젝트면** `supabase/schema.sql` 전체 실행  
+   **이미 bookings만 있으면** 필요 시 `supabase/migration_booking_number.sql` 실행
+3. **동행 Manager 지원용**으로 `supabase/migration_managers.sql` 실행 (필수)
+4. (선택) 배정·리포트 연결: `supabase/migration_assignments.sql`
+5. SQL 내용 **전체 복사 → 붙여넣기 → Run**
 
 ### 3) API 키 복사
 1. **Project Settings** (톱니바퀴) → **API**
@@ -83,8 +88,8 @@ GitHub에 코드가 올라가 있으면:
 | 단계 | 해야 할 일 | 완료 기준 |
 |------|------------|-----------|
 | 로컬 실행 | `npm run dev` | localhost에서 폼이 보임 |
-| Supabase | 프로젝트 + SQL 실행 + `.env.local` | 접수 후 DB `bookings`에 row 생김 |
-| Vercel | Import + env 2개 | 공개 URL에서 접수 가능 |
+| Supabase | 프로젝트 + SQL(`bookings`+`managers`) + `.env.local` | `/` 접수 → `bookings`, `/manager` → `managers` |
+| Vercel | 기존 mediblack 프로젝트에 push (추가 Import 불필요) | `https://….vercel.app` 및 `/manager` 동작 |
 | PWA | 폰 Safari/Chrome에서 사이트 열기 | “홈 화면에 추가” 가능 |
 
 ---

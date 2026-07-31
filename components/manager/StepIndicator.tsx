@@ -12,7 +12,11 @@ export function StepIndicator({ current }: { current: number }) {
         const done = step < current;
         const active = step === current;
         return (
-          <div key={step} className="flex flex-1 items-center gap-2" role="listitem">
+          <div
+            key={step}
+            className="flex flex-1 items-center gap-2"
+            role="listitem"
+          >
             <div
               className={cn(
                 "h-1.5 flex-1 rounded-full transition-colors",

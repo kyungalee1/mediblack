@@ -1,6 +1,5 @@
--- 동행 Manager App: managers (지원 신청)
--- MediBlack과 동일한 Supabase 프로젝트에서 실행하세요.
--- bookings 연결 배정은 migration_assignments.sql 을 이어서 실행합니다.
+-- 동행 Manager 지원 테이블 (기존 MediBlack Supabase 프로젝트에 추가 실행)
+-- bookings 테이블이 이미 있어야 합니다. 배정 연결은 migration_assignments.sql
 
 create extension if not exists "pgcrypto";
 
@@ -9,7 +8,6 @@ create table if not exists public.managers (
   created_at timestamptz not null default now(),
   application_number text not null unique,
 
-  -- 인적사항
   full_name text not null,
   phone text not null,
   email text,
@@ -17,20 +15,17 @@ create table if not exists public.managers (
   gender text,
   region text not null,
 
-  -- 자격·경력
   certifications text[] not null default '{}',
   other_certification text,
   experience_years text,
   specialty_areas text[] not null default '{}',
   languages text[] not null default '{}',
 
-  -- 활동 가능 조건
   available_days text[] not null default '{}',
   preferred_hospitals text,
   intro text,
   motivation text,
 
-  -- 동의·상태
   agree_privacy boolean not null default false,
   agree_terms boolean not null default false,
   status text not null default 'PENDING',

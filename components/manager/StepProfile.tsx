@@ -4,10 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Chip, FieldError } from "@/components/ui/chip";
 import {
-  GENDER_OPTIONS,
+  MANAGER_GENDER_OPTIONS,
   REGION_SUGGESTIONS,
   type ManagerFormData,
-} from "@/lib/types";
+} from "@/lib/manager";
 import { formatPhone } from "@/lib/utils";
 
 type Errors = Partial<Record<keyof ManagerFormData, string>>;
@@ -74,14 +74,17 @@ export function StepProfile({ data, errors, onChange }: Props) {
             maxLength={4}
             value={data.birthYear}
             onChange={(e) =>
-              onChange("birthYear", e.target.value.replace(/\D/g, "").slice(0, 4))
+              onChange(
+                "birthYear",
+                e.target.value.replace(/\D/g, "").slice(0, 4)
+              )
             }
           />
         </div>
         <div>
           <Label>성별</Label>
           <div className="flex flex-wrap gap-2">
-            {GENDER_OPTIONS.map((g) => (
+            {MANAGER_GENDER_OPTIONS.map((g) => (
               <Chip
                 key={g}
                 selected={data.gender === g}

@@ -1,7 +1,5 @@
--- MediBlack bookings ↔ managers 배정 (운영·리포트용)
--- 선행 조건:
---   1) MediBlack supabase/schema.sql  (bookings)
---   2) 동행Manager supabase/schema.sql (managers)
+-- bookings ↔ managers 배정 (운영·리포트용)
+-- 선행: schema.sql (bookings) + migration_managers.sql (managers)
 
 create table if not exists public.booking_assignments (
   id uuid primary key default gen_random_uuid(),

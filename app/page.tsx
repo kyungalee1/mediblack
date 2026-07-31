@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BookingWizard } from "@/components/booking/BookingWizard";
 import { ShieldCheck, Sparkles } from "lucide-react";
 
@@ -28,8 +29,16 @@ export default function HomePage() {
         <BookingWizard />
       </section>
 
-      <footer className="py-5 text-center text-[11px] text-slate-400">
-        © {new Date().getFullYear()} MediBlack. All rights reserved.
+      <footer className="space-y-1 py-5 text-center text-[11px] text-slate-400">
+        <p>
+          <Link
+            href="/manager"
+            className="font-medium text-teal underline-offset-2 hover:underline"
+          >
+            동행 Manager 지원하기 →
+          </Link>
+        </p>
+        <p>© {new Date().getFullYear()} MediBlack. All rights reserved.</p>
       </footer>
     </main>
   );
