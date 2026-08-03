@@ -59,6 +59,7 @@ export async function POST(request: Request) {
       appointment_date: body.appointment_date,
       appointment_time: body.appointment_time ?? null,
       medical_condition: body.medical_condition ?? null,
+      transport_method: body.transport_method ?? null,
       special_requests: body.special_requests ?? null,
       doctor_questions: body.doctor_questions ?? null,
       selected_plan: body.selected_plan,
@@ -67,17 +68,41 @@ export async function POST(request: Request) {
     };
 
     const supabase = getSupabase();
-    const { data, error } = await supabase
+    let { data, error } = await supabase
       .from("bookings")
       .insert(payload)
       .select("id, booking_number")
       .single();
 
-    if (error) {
+    // transport_method 컬럼이 아직 없으면 마이그레이션 전 호환 저장
+    if (
+      error &&
+      (error.message?.includes("transport_method") || error.code === "PGRST204")
+    ) {
+      const { transport_method, ...legacy } = payload;
+      const note = transport_method
+        ? `[이동수단] ${transport_method}`
+        : null;
+      const mergedRequests = [legacy.special_requests, note]
+        .filter(Boolean)
+        .join("\n");
+      const retry = await supabase
+        .from("bookings")
+        .insert({
+          ...legacy,
+          special_requests: mergedRequests || null,
+        })
+        .select("id, booking_number")
+        .single();
+      data = retry.data;
+      error = retry.error;
+    }
+
+    if (error || !data) {
       console.error("[bookings] insert error:", error);
       const duplicate =
-        error.code === "23505" ||
-        error.message?.toLowerCase().includes("duplicate");
+        error?.code === "23505" ||
+        error?.message?.toLowerCase().includes("duplicate");
       return NextResponse.json(
         {
           error: duplicate

@@ -11,6 +11,7 @@ const TONE: Record<string, string> = {
   APPROVED: "bg-emerald-100 text-emerald-900",
   REJECTED: "bg-red-100 text-red-800",
   INACTIVE: "bg-slate-200 text-slate-700",
+  ACCOMPANYING: "bg-violet-100 text-violet-900",
 };
 
 export function StatusBadge({

@@ -41,8 +41,9 @@ npm run dev
 2. **새 프로젝트면** `supabase/schema.sql` 전체 실행  
    **이미 bookings만 있으면** 필요 시 `supabase/migration_booking_number.sql` 실행
 3. **동행 Manager 지원용**으로 `supabase/migration_managers.sql` 실행 (필수)
-4. (선택) 배정·리포트 연결: `supabase/migration_assignments.sql`
-5. SQL 내용 **전체 복사 → 붙여넣기 → Run**
+4. **이동수단·매니저 배정**용으로 `supabase/migration_transport_assign.sql` 실행 (필수)
+5. (구버전) 배정만: `supabase/migration_assignments.sql` — 4번으로 대체 가능
+6. SQL 내용 **전체 복사 → 붙여넣기 → Run**
 
 ### 3) API 키 복사
 1. **Project Settings** (톱니바퀴) → **API**

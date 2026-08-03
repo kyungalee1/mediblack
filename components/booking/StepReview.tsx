@@ -81,6 +81,7 @@ export function StepReview({ data, errors, onChange }: StepReviewProps) {
               .join(" ")}
           />
           <Row label="질환/상태" value={data.medicalCondition} />
+          <Row label="이동수단" value={data.transportMethod} />
           <Row label="요청사항" value={data.specialRequests} />
           <Row label="의사 질문" value={data.doctorQuestions} />
         </dl>

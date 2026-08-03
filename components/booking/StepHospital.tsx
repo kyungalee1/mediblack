@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Chip, FieldError } from "@/components/ui/chip";
-import { HOSPITAL_SUGGESTIONS, type BookingFormData } from "@/lib/types";
+import { HOSPITAL_SUGGESTIONS, TRANSPORT_OPTIONS, TRANSPORT_OPTION_HINT, type BookingFormData } from "@/lib/types";
 
 interface StepHospitalProps {
   data: BookingFormData;
@@ -96,6 +96,40 @@ export function StepHospital({ data, errors, onChange }: StepHospitalProps) {
           value={data.medicalCondition}
           onChange={(e) => onChange("medicalCondition", e.target.value)}
         />
+      </div>
+
+      <div>
+        <Label>병원 이동수단</Label>
+        <p className="mb-2 text-xs text-slate-500">
+          환자와 매니저가 병원까지 이동하는 방법을 선택해 주세요.
+        </p>
+        <div className="flex flex-col gap-2">
+          {TRANSPORT_OPTIONS.map((option) => {
+            const selected = data.transportMethod === option;
+            return (
+              <Chip
+                key={option}
+                selected={selected}
+                onClick={() => onChange("transportMethod", option)}
+                className="h-auto min-h-11 justify-start px-4 py-2.5 text-left text-sm"
+              >
+                <span className="flex flex-col items-start gap-0.5">
+                  <span className="font-semibold">{option}</span>
+                  <span
+                    className={
+                      selected
+                        ? "text-[11px] font-normal text-white/75"
+                        : "text-[11px] font-normal text-slate-500"
+                    }
+                  >
+                    {TRANSPORT_OPTION_HINT[option]}
+                  </span>
+                </span>
+              </Chip>
+            );
+          })}
+        </div>
+        <FieldError message={errors.transportMethod} />
       </div>
 
       <div>

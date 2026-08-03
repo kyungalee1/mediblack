@@ -5,6 +5,7 @@ import {
   BOOKING_STATUSES,
   BOOKING_STATUS_LABEL,
   type AdminBooking,
+  type AdminManager,
   type BookingStatus,
 } from "@/lib/admin-types";
 import { formatPrice } from "@/lib/utils";
@@ -12,20 +13,28 @@ import { StatusBadge } from "@/components/admin/StatusBadge";
 
 export function BookingsPanel() {
   const [items, setItems] = useState<AdminBooking[]>([]);
+  const [managers, setManagers] = useState<AdminManager[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState<string>("ALL");
   const [selected, setSelected] = useState<AdminBooking | null>(null);
   const [saving, setSaving] = useState(false);
+  const [assignManagerId, setAssignManagerId] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/admin/bookings");
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "목록 로드 실패");
-      setItems(json.items || []);
+      const [bookingsRes, managersRes] = await Promise.all([
+        fetch("/api/admin/bookings"),
+        fetch("/api/admin/managers"),
+      ]);
+      const bookingsJson = await bookingsRes.json();
+      const managersJson = await managersRes.json();
+      if (!bookingsRes.ok)
+        throw new Error(bookingsJson.error || "목록 로드 실패");
+      setItems(bookingsJson.items || []);
+      if (managersRes.ok) setManagers(managersJson.items || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "목록 로드 실패");
     } finally {
@@ -37,32 +46,54 @@ export function BookingsPanel() {
     load();
   }, [load]);
 
+  const open = (b: AdminBooking) => {
+    setSelected(b);
+    setAssignManagerId(b.assigned_manager_id || "");
+  };
+
   const filtered =
     filter === "ALL" ? items : items.filter((b) => b.status === filter);
 
-  const updateStatus = async (id: string, status: BookingStatus) => {
+  const assignableManagers = managers.filter((m) =>
+    ["APPROVED", "ACCOMPANYING"].includes(m.status)
+  );
+
+  const patchBooking = async (
+    id: string,
+    body: { status?: BookingStatus; manager_id?: string }
+  ) => {
     setSaving(true);
     setError("");
     try {
       const res = await fetch(`/api/admin/bookings/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify(body),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "상태 변경 실패");
-      setItems((prev) =>
-        prev.map((b) => (b.id === id ? { ...b, status: json.status } : b))
-      );
-      setSelected((prev) =>
-        prev && prev.id === id ? { ...prev, status: json.status } : prev
-      );
+      if (!res.ok) throw new Error(json.error || "저장 실패");
+      await load();
+      setSelected((prev) => {
+        if (!prev || prev.id !== id) return prev;
+        // load 후 items에서 최신 찾기
+        return null;
+      });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "상태 변경 실패");
+      setError(err instanceof Error ? err.message : "저장 실패");
     } finally {
       setSaving(false);
     }
   };
+
+  // selected를 load 이후 최신으로 유지
+  useEffect(() => {
+    if (!selected) return;
+    const fresh = items.find((b) => b.id === selected.id);
+    if (fresh) {
+      setSelected(fresh);
+      setAssignManagerId(fresh.assigned_manager_id || "");
+    }
+  }, [items]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="space-y-4">
@@ -103,6 +134,7 @@ export function BookingsPanel() {
                   <th className="px-4 py-3">예약번호</th>
                   <th className="px-4 py-3">환자 / 신청자</th>
                   <th className="px-4 py-3">병원 · 일정</th>
+                  <th className="px-4 py-3">배정 매니저</th>
                   <th className="px-4 py-3">요금제</th>
                   <th className="px-4 py-3">상태</th>
                 </tr>
@@ -112,7 +144,7 @@ export function BookingsPanel() {
                   <tr
                     key={b.id}
                     className="cursor-pointer border-t border-slate-100 hover:bg-slate-50"
-                    onClick={() => setSelected(b)}
+                    onClick={() => open(b)}
                   >
                     <td className="px-4 py-3 font-mono text-xs font-semibold">
                       {b.booking_number}
@@ -129,6 +161,20 @@ export function BookingsPanel() {
                         {b.appointment_date}
                         {b.appointment_time ? ` ${b.appointment_time}` : ""}
                       </p>
+                    </td>
+                    <td className="px-4 py-3">
+                      {b.assigned_manager_name ? (
+                        <>
+                          <p className="font-semibold text-navy">
+                            {b.assigned_manager_name}
+                          </p>
+                          <p className="text-xs text-slate-500">
+                            {b.assigned_manager_phone || ""}
+                          </p>
+                        </>
+                      ) : (
+                        <span className="text-xs text-slate-400">미배정</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <p>{b.selected_plan}</p>
@@ -160,18 +206,80 @@ export function BookingsPanel() {
         >
           <dl className="space-y-2 text-sm">
             <Row k="환자" v={selected.patient_name} />
-            <Row k="신청자" v={`${selected.applicant_name} (${selected.relationship})`} />
+            <Row
+              k="신청자"
+              v={`${selected.applicant_name} (${selected.relationship})`}
+            />
             <Row k="연락처" v={selected.applicant_phone} />
-            <Row k="병원" v={`${selected.hospital_name} ${selected.department || ""}`} />
+            <Row
+              k="병원"
+              v={`${selected.hospital_name} ${selected.department || ""}`}
+            />
             <Row
               k="일정"
               v={`${selected.appointment_date} ${selected.appointment_time || ""}`}
             />
-            <Row k="요금제" v={`${selected.selected_plan} · ${formatPrice(selected.price)}`} />
+            <Row
+              k="이동수단"
+              v={selected.transport_method || "—"}
+            />
+            <Row
+              k="요금제"
+              v={`${selected.selected_plan} · ${formatPrice(selected.price)}`}
+            />
             <Row k="질환" v={selected.medical_condition || "—"} />
             <Row k="특이사항" v={selected.special_requests || "—"} />
             <Row k="의사 질문" v={selected.doctor_questions || "—"} />
+            <Row
+              k="배정 매니저"
+              v={
+                selected.assigned_manager_name
+                  ? `${selected.assigned_manager_name}${
+                      selected.assigned_manager_phone
+                        ? ` · ${selected.assigned_manager_phone}`
+                        : ""
+                    }`
+                  : "미배정"
+              }
+            />
           </dl>
+
+          <div className="mt-5">
+            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+              동행 Manager 배정
+            </p>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <select
+                className="flex-1 rounded-xl border-2 border-slate-200 bg-white px-3 py-2 text-sm"
+                value={assignManagerId}
+                onChange={(e) => setAssignManagerId(e.target.value)}
+              >
+                <option value="">매니저 선택…</option>
+                {assignableManagers.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.full_name} ({m.region}) · {MANAGER_STATUS_SHORT(m.status)}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                disabled={saving || !assignManagerId}
+                onClick={() =>
+                  patchBooking(selected.id, { manager_id: assignManagerId })
+                }
+                className="rounded-xl bg-navy px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+              >
+                배정 저장
+              </button>
+            </div>
+            {assignableManagers.length === 0 && (
+              <p className="mt-2 text-xs text-slate-500">
+                승인(또는 동행중) 상태의 매니저가 없습니다. 먼저 매니저를
+                승인해 주세요.
+              </p>
+            )}
+          </div>
+
           <div className="mt-5">
             <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">
               상태 변경
@@ -182,7 +290,7 @@ export function BookingsPanel() {
                   key={s}
                   type="button"
                   disabled={saving || selected.status === s}
-                  onClick={() => updateStatus(selected.id, s)}
+                  onClick={() => patchBooking(selected.id, { status: s })}
                   className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold hover:border-navy disabled:opacity-40"
                 >
                   {BOOKING_STATUS_LABEL[s]}
@@ -194,6 +302,12 @@ export function BookingsPanel() {
       )}
     </div>
   );
+}
+
+function MANAGER_STATUS_SHORT(status: string) {
+  if (status === "ACCOMPANYING") return "동행중";
+  if (status === "APPROVED") return "승인";
+  return status;
 }
 
 function FilterChip({
@@ -223,7 +337,7 @@ function FilterChip({
 function Row({ k, v }: { k: string; v: string }) {
   return (
     <div className="flex gap-3 border-b border-slate-100 py-2">
-      <dt className="w-20 shrink-0 text-xs font-semibold text-slate-400">{k}</dt>
+      <dt className="w-24 shrink-0 text-xs font-semibold text-slate-400">{k}</dt>
       <dd className="font-medium text-navy">{v}</dd>
     </div>
   );

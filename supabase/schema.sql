@@ -19,6 +19,7 @@ create table if not exists public.bookings (
   appointment_date date not null,
   appointment_time text,
   medical_condition text,
+  transport_method text,
   special_requests text,
   doctor_questions text,
   selected_plan text not null,

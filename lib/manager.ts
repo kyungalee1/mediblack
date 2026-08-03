@@ -1,4 +1,4 @@
-export type ManagerGender = "남성" | "여성" | "기타";
+export type ManagerGender = "남성" | "여성";
 
 export type Certification =
   | "요양보호사"
@@ -110,11 +110,7 @@ export function createInitialManagerFormData(
   };
 }
 
-export const MANAGER_GENDER_OPTIONS: ManagerGender[] = [
-  "남성",
-  "여성",
-  "기타",
-];
+export const MANAGER_GENDER_OPTIONS: ManagerGender[] = ["남성", "여성"];
 
 export const CERTIFICATION_META: CertificationMeta[] = [
   { id: "요양보호사", description: "노인·환자 일상 케어 및 이동 보조" },

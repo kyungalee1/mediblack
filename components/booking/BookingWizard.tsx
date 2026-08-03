@@ -34,6 +34,8 @@ function validateStep(step: number, data: BookingFormData): Errors {
     if (!data.hospitalName.trim()) errors.hospitalName = "병원명을 입력해 주세요.";
     if (!data.appointmentDate)
       errors.appointmentDate = "병원 예약 날짜를 선택해 주세요.";
+    if (!data.transportMethod)
+      errors.transportMethod = "병원 이동수단을 선택해 주세요.";
   }
 
   if (step === 3) {
@@ -128,6 +130,7 @@ export function BookingWizard() {
           appointment_date: data.appointmentDate,
           appointment_time: data.appointmentTime || null,
           medical_condition: data.medicalCondition.trim() || null,
+          transport_method: data.transportMethod || null,
           special_requests: data.specialRequests.trim() || null,
           doctor_questions: data.doctorQuestions.trim() || null,
           selected_plan: plan.name,

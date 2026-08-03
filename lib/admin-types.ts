@@ -11,6 +11,7 @@ export type ManagerStatus =
   | "REVIEWING"
   | "APPROVED"
   | "REJECTED"
+  | "ACCOMPANYING"
   | "INACTIVE";
 
 export const BOOKING_STATUSES: BookingStatus[] = [
@@ -27,6 +28,7 @@ export const MANAGER_STATUSES: ManagerStatus[] = [
   "REVIEWING",
   "APPROVED",
   "REJECTED",
+  "ACCOMPANYING",
   "INACTIVE",
 ];
 
@@ -44,8 +46,18 @@ export const MANAGER_STATUS_LABEL: Record<ManagerStatus, string> = {
   REVIEWING: "심사 중",
   APPROVED: "승인",
   REJECTED: "반려",
+  ACCOMPANYING: "동행중",
   INACTIVE: "비활성",
 };
+
+export interface AdminBookingAssignment {
+  id: string;
+  manager_id: string;
+  status: string;
+  assigned_at: string;
+  manager_name: string | null;
+  manager_phone: string | null;
+}
 
 export interface AdminBooking {
   id: string;
@@ -63,11 +75,27 @@ export interface AdminBooking {
   appointment_date: string;
   appointment_time: string | null;
   medical_condition: string | null;
+  transport_method: string | null;
   special_requests: string | null;
   doctor_questions: string | null;
   selected_plan: string;
   price: number;
   status: string;
+  /** 현재 활성 배정 매니저 (목록/상세용) */
+  assigned_manager_id?: string | null;
+  assigned_manager_name?: string | null;
+  assigned_manager_phone?: string | null;
+  assignment_id?: string | null;
+  assignment_status?: string | null;
+}
+
+export interface AdminManagerActiveBooking {
+  booking_id: string;
+  booking_number: string;
+  patient_name: string;
+  hospital_name: string;
+  appointment_date: string;
+  assignment_status: string;
 }
 
 export interface AdminManager {
@@ -91,4 +119,6 @@ export interface AdminManager {
   motivation: string | null;
   status: string;
   notes: string | null;
+  /** 동행중일 때 매핑된 환자/예약 */
+  active_booking?: AdminManagerActiveBooking | null;
 }
