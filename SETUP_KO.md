@@ -69,13 +69,30 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...
 
 ---
 
+## B-2. 관리자 대시보드 (`/admin`)
+
+1. `.env.local` (및 Vercel Environment Variables)에 추가:
+   ```env
+   ADMIN_PASSWORD=원하는비밀번호
+   ```
+2. (권장) Supabase **service_role** 키도 서버에만 추가:
+   ```env
+   SUPABASE_SERVICE_ROLE_KEY=...
+   ```
+3. service_role 없이 anon만 쓸 경우 SQL Editor에서  
+   `supabase/migration_admin_update.sql` 실행 (상태 변경 UPDATE 허용)
+4. 접속: `http://localhost:3000/admin` 또는 `https://(배포주소)/admin`
+5. 메뉴: 대시보드 · 보호자 접수 · 동행 Manager
+
+---
+
 ## C. Vercel 배포 (최초 1회, 약 3분)
 
 GitHub에 코드가 올라가 있으면:
 
 1. https://vercel.com/new 접속 (GitHub로 로그인)
 2. **Import** 에서 `mediblack` (또는 안내된 리포지토리) 선택
-3. **Environment Variables**에 B-3의 두 값을 그대로 추가
+3. **Environment Variables**에 B-3의 두 값 + `ADMIN_PASSWORD` (+ 선택 `SUPABASE_SERVICE_ROLE_KEY`) 추가
 4. **Deploy** 클릭
 
 배포가 끝나면 `https://….vercel.app` 주소가 생깁니다.  

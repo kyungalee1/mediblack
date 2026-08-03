@@ -42,6 +42,10 @@ npm run dev
 **동행 Manager (`/manager`)**  
 1. 인적사항 → 2. 자격·경력 → 3. 활동 조건 → 4. 제출
 
+**관리자 대시보드 (`/admin`)**  
+- `ADMIN_PASSWORD` 설정 후 로그인  
+- 보호자 접수 · 매니저 지원 목록/상태 관리
+
 ## Scripts
 
 | Command | Description |
