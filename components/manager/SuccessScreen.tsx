@@ -70,7 +70,7 @@ export function SuccessScreen({
         </li>
       </ul>
 
-      <InstallPrompt className="mt-6 w-full text-left" />
+      <InstallPrompt className="mt-6 w-full text-left" variant="manager" />
 
       <Button
         type="button"

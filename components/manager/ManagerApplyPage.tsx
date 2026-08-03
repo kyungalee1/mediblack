@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ApplyWizard } from "@/components/manager/ApplyWizard";
+import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { HeartHandshake, ShieldCheck } from "lucide-react";
 
 export function ManagerApplyPage() {
@@ -18,7 +19,7 @@ export function ManagerApplyPage() {
               프리미엄 병원 동행 파트너 지원
             </p>
           </div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-navy text-gold shadow-md">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-navy text-teal shadow-md">
             <HeartHandshake className="h-5 w-5" strokeWidth={2} />
           </div>
         </header>
@@ -27,6 +28,8 @@ export function ManagerApplyPage() {
           <ShieldCheck className="h-4 w-4 shrink-0 text-teal" />
           자격·경력 등록 후 심사 · 승인 시 MediBlack 배정 연결
         </div>
+
+        <InstallPrompt className="mb-5" variant="manager" />
 
         <section className="flex flex-1 flex-col rounded-[1.75rem] bg-white p-5 shadow-[0_8px_40px_-12px_rgba(15,23,42,0.12)] ring-1 ring-slate-100/80">
           <ApplyWizard />

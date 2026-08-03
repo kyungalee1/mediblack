@@ -10,13 +10,40 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
-export function InstallPrompt({ className }: { className?: string }) {
+type Variant = "booking" | "manager";
+
+const COPY: Record<
+  Variant,
+  { title: string; body: string; border: string; bg: string }
+> = {
+  booking: {
+    title: "MediBlack 홈 화면에 추가",
+    body: "보호자 접수 앱으로 설치됩니다. 동행 Manager와 따로 설치할 수 있습니다.",
+    border: "border-gold/40",
+    bg: "from-[#FFF9EB] to-white",
+  },
+  manager: {
+    title: "동행 Manager 홈 화면에 추가",
+    body: "매니저 지원 앱으로 따로 설치됩니다. MediBlack 접수 앱과 아이콘·이름이 다릅니다.",
+    border: "border-teal/30",
+    bg: "from-[#E8F5F3] to-white",
+  },
+};
+
+export function InstallPrompt({
+  className,
+  variant = "booking",
+}: {
+  className?: string;
+  variant?: Variant;
+}) {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(
     null
   );
   const [isIOS, setIsIOS] = useState(false);
   const [installed, setInstalled] = useState(false);
   const [showIOSHint, setShowIOSHint] = useState(false);
+  const copy = COPY[variant];
 
   useEffect(() => {
     const ua = window.navigator.userAgent;
@@ -58,26 +85,36 @@ export function InstallPrompt({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-3xl border-2 border-gold/40 bg-gradient-to-br from-[#FFF9EB] to-white p-5",
+        "overflow-hidden rounded-3xl border-2 bg-gradient-to-br p-5",
+        copy.border,
+        copy.bg,
         className
       )}
     >
       <div className="flex items-start gap-3">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-navy text-gold">
+        <div
+          className={cn(
+            "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-navy",
+            variant === "manager" ? "text-teal" : "text-gold"
+          )}
+        >
           <Smartphone className="h-6 w-6" />
         </div>
         <div className="flex-1">
-          <p className="font-bold text-navy">홈 화면에 추가하기</p>
+          <p className="font-bold text-navy">{copy.title}</p>
           <p className="mt-1 text-sm leading-relaxed text-slate-600">
-            앱처럼 바로 실행하고, 예약 진행 상황을 빠르게 확인하세요.
+            {copy.body}
           </p>
         </div>
       </div>
 
       <Button
         type="button"
-        variant="gold"
-        className="mt-4 w-full"
+        variant={variant === "manager" ? "primary" : "gold"}
+        className={cn(
+          "mt-4 w-full",
+          variant === "manager" && "bg-teal hover:bg-teal/90"
+        )}
         onClick={onInstall}
       >
         <Download className="h-5 w-5" />
@@ -91,11 +128,23 @@ export function InstallPrompt({ className }: { className?: string }) {
             Safari 설치 안내
           </p>
           <ol className="mt-2 list-decimal space-y-1 pl-5">
-            <li>하단 공유 버튼을 탭하세요</li>
+            <li>
+              반드시{" "}
+              <strong>
+                {variant === "manager" ? "/manager" : "접수 홈(/)"}
+              </strong>{" "}
+              화면에서 공유를 누르세요
+            </li>
             <li>
               <strong>홈 화면에 추가</strong>를 선택하세요
             </li>
-            <li>추가를 누르면 완료됩니다</li>
+            <li>
+              이름에{" "}
+              <strong>
+                {variant === "manager" ? "동행Manager" : "MediBlack"}
+              </strong>
+              이 보이는지 확인하세요
+            </li>
           </ol>
         </div>
       )}
