@@ -1,5 +1,5 @@
 export type Relationship = "자녀" | "배우자" | "본인" | "기타";
-export type PatientGender = "남성" | "여성" | "기타";
+export type PatientGender = "남성" | "여성";
 export type PlanId = "standard" | "deep" | "full";
 
 /** 병원 이동수단 */
@@ -83,7 +83,7 @@ export const RELATIONSHIP_OPTIONS: Relationship[] = [
   "기타",
 ];
 
-export const GENDER_OPTIONS: PatientGender[] = ["남성", "여성", "기타"];
+export const GENDER_OPTIONS: PatientGender[] = ["남성", "여성"];
 
 export const TRANSPORT_OPTIONS: TransportMethod[] = [
   "택시",
