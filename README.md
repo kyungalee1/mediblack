@@ -68,4 +68,5 @@ supabase/
   schema.sql
   migration_managers.sql
   migration_assignments.sql
+
 ```
